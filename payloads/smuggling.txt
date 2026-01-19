@@ -1,0 +1,34 @@
+# HTTP Request Smuggling Signatures
+# These are signatures/probes, not actual smuggling (which requires raw sockets)
+# Format: URL|HEADERS (pipe-separated custom headers)
+
+# ==== CL.TE Detection Probes ====
+/|Transfer-Encoding: chunked|Content-Length: 4
+/|Transfer-Encoding: chunked|Content-Length: 6
+/|Transfer-Encoding: chunked|Content-Length: 10
+
+# ==== TE.CL Detection Probes ====
+/|Content-Length: 3|Transfer-Encoding: chunked
+/|Content-Length: 5|Transfer-Encoding: chunked
+/|Content-Length: 0|Transfer-Encoding: chunked
+
+# ==== TE.TE Obfuscation ====
+/|Transfer-Encoding: chunked|Transfer-Encoding: x
+/|Transfer-Encoding: xchunked|Transfer-Encoding: chunked
+/|Transfer-Encoding: chunked |Transfer-Encoding: x
+/|Transfer-Encoding : chunked|X-Test: 1
+/|Transfer-Encoding:chunked|X-Test: 1
+/|Transfer-Encoding: chunked|X-Forwarded-For: 127.0.0.1
+/| Transfer-Encoding: chunked|X-Test: 1
+/|X:x\nTransfer-Encoding: chunked|X-Test: 1
+
+# ==== Header Injection Attempts ====
+/|X-Injected: test\r\nX-Evil: payload
+/|Host: evil.com\r\nX-Original-Host: target.com
+/|X-Forwarded-Host: evil.com\r\nHost: target.com
+
+# ==== HTTP/2 Downgrade ====
+/|:method: GET|:path: /admin|:authority: target.com
+
+# ==== WebSocket Smuggling Probe ====
+/|Upgrade: websocket|Connection: Upgrade|Sec-WebSocket-Version: 13|Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==
